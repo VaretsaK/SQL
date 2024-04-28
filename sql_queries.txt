@@ -1,0 +1,121 @@
+# Create table for librarians
+CREATE TABLE librarians(
+    id serial PRIMARY KEY,
+    librarian_name varchar(100) NOT NULL
+);
+
+# Create table for authors
+CREATE TABLE authors(
+    id serial PRIMARY KEY,
+    author_name varchar(100) NOT NULL
+);
+
+# Create table for users
+CREATE TABLE users(
+    id serial PRIMARY KEY,
+    user_name varchar(100) NOT NULL,
+    user_email varchar(80) NOT NULL,
+    user_age int
+);
+
+# Create table for books with a foreign key reference to authors
+CREATE TABLE books(
+    isbn char(20) PRIMARY KEY,
+    book_title varchar(128) NOT NULL,
+    author_id int REFERENCES authors(id),
+    availability boolean DEFAULT true
+);
+
+# Create table for checkouts linking users, books, and librarians with timestamps for checkout and return
+CREATE TABLE checkouts(
+    id serial PRIMARY KEY,
+    user_id int NOT NULL REFERENCES users(id),
+    book_isbn char(13) NOT NULL REFERENCES books(isbn),
+    librarian_id int NOT NULL REFERENCES librarians(id),
+    checkout_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    return_date timestamp
+);
+
+# Insert authors into the authors table
+INSERT INTO public.authors(author_name)
+VALUES
+    ('Stephen King'),
+    ('Taras Shevchenko'),
+    ('Harari Hoah'),
+    ('William Shakespeare'),
+    ('Joanne Rowling'),
+    ('Ernest Hemingway'),
+    ('Mark Twain'),
+    ('Andriy Lyubka'),
+    ('Lesya Ukrainka');
+
+# Insert users into the users table
+INSERT INTO public.users(user_name, user_email, user_age)
+VALUES
+    ('David Blaine', 'blane@dave.com', 44),
+    ('Richard', 'rich@ard.com', 35),
+    ('Sara', 'sara@ara.com', 23),
+    ('Mikky', 'mik@ki.com', 33);
+
+# Insert books into the books table
+INSERT INTO public.books(isbn, book_title, author_id)
+VALUES
+    ('0234742392347', 'Sapiens', 3),
+    ('2438242384988', 'Harry Potter', 5),
+    ('3249823948239', 'The Old Man and the Sea', 6),
+    ('9349834977383', 'Hamlet', 4),
+    ('9781476727653', 'Doctor Sleep', 1),
+    ('9781782670575', 'Kobzar', 2),
+    ('9783424242422', 'Carbide', 8),
+    ('9783434245555', 'The Adventures of Tom Sawyer', 7),
+    ('0234743392347', 'Homo Deus', 3),
+    ('9784564643534', 'Boiarynia', 9);
+
+# Insert librarians into the librarians table
+INSERT INTO public.librarians(librarian_name)
+VALUES
+    ('Karl'),
+    ('Mike'),
+    ('Jake');
+
+# Insert checkout records into the checkouts table
+INSERT INTO public.checkouts(user_id, book_isbn, librarian_id)
+VALUES
+    (4, '2438242384988', 2),
+    (1, '9349834977383', 1);
+
+
+# Query to join checkouts with users, books, and librarians to display a comprehensive checkout record
+SELECT users.user_name, books.book_title, librarians.librarian_name, checkouts.checkout_date, checkouts.return_date
+FROM checkouts
+INNER JOIN users ON checkouts.user_id = users.id
+INNER JOIN books ON checkouts.book_isbn = books.isbn
+INNER JOIN librarians ON checkouts.librarian_id = librarians.id;
+
+# Query to get checkout records for a specific user
+SELECT users.user_name, books.book_title, librarians.librarian_name, checkouts.checkout_date, checkouts.return_date
+FROM checkouts
+INNER JOIN users ON checkouts.user_id = users.id
+INNER JOIN books ON checkouts.book_isbn = books.isbn
+INNER JOIN librarians ON checkouts.librarian_id = librarians.id
+WHERE users.user_name = 'Mikky';
+
+# Query to join books with authors to get a list of books along with their authors
+SELECT books.isbn, books.book_title, authors.author_name
+FROM books
+INNER JOIN authors ON books.author_id = authors.id;
+
+# Query to get books by a specific author
+SELECT books.isbn, books.book_title, authors.author_name
+FROM books
+INNER JOIN authors ON books.author_id = authors.id
+WHERE authors.author_name = 'Harari Hoah';
+
+# Update the return date in the checkouts table for a specific user and book
+UPDATE public.checkouts
+SET return_date = CURRENT_TIMESTAMP
+FROM users, books
+WHERE checkouts.user_id = users.id
+    AND users.user_name = 'Mikky'
+    AND checkouts.book_isbn = books.isbn
+    AND books.book_title = 'Harry Potter';
