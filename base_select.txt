@@ -1,0 +1,95 @@
+CREATE TABLE customers(
+	id serial PRIMARY KEY,
+	customer_name varchar(50) NOT NULL,
+	email varchar(80) NOT NULL
+);
+
+CREATE TABLE products(
+	id serial PRIMARY KEY,
+	product_name varchar(80) NOT NULL,
+	price decimal (10, 2) NOT NULL
+);
+
+CREATE TABLE orders(
+	id serial PRIMARY KEY,
+	customer_id integer REFERENCES customers(id),
+	product_id integer REFERENCES products(id),
+	order_date date DEFAULT CURRENT_DATE,
+	quantity integer NOT NULL
+);
+
+CREATE TABLE suppliers(
+	id serial PRIMARY KEY,
+	supplier_name varchar(100) NOT NULL,
+	contact_name varchar(80) NOT NULL
+);
+
+CREATE TABLE product_suppliers(
+	id serial PRIMARY KEY,
+	product_id integer REFERENCES products(id),
+	supplier_id integer REFERENCES suppliers(id),
+	supply_date date DEFAULT CURRENT_DATE
+);
+
+INSERT INTO customers(customer_name, email)
+VALUES
+	('Dave', 'dave@gmail.com'),
+	('John', 'john@gmail.com'),
+	('Mark', 'mark@mail.com'),
+	('Jane', 'jane@mail.com'),
+	('Cris', 'cris@mail.com');
+
+INSERT INTO suppliers(supplier_name, contact_name)
+VALUES
+	('Misto', 'Cris Nolan'),
+	('Dnipro', 'Bob Marlee'),
+	('Slavutich', 'John Week'),
+	('Karavan', 'Some Name');
+
+INSERT INTO products(product_name, price)
+VALUES
+	('Boat', 3444.34),
+	('Bike', 5500),
+	('Tire', 400),
+	('Door', 500.4),
+	('Frame', 20.30),
+	('Log', 60);
+
+INSERT INTO product_suppliers(product_id, supplier_id)
+VALUES
+	(1, 2),
+	(2, 2),
+	(3, 3),
+	(4, 1),
+	(5, 4),
+	(6, 1);
+
+INSERT INTO orders(customer_id, product_id, quantity)
+VALUES
+	(2, 1, 44),
+	(1, 2, 2),
+	(3, 3, 33),
+	(4, 4, 6),
+	(4, 5, 10),
+	(5, 6, 15),
+	(1, 3, 22),
+	(2, 4, 1);
+
+Після цього заповніть таблиці даними та напишіть такі запити:
+Поверніть список всіх продуктів
+SELECT * FROM products;
+
+Поверніть список всіх користувачів, у яких пошта закінчується на "@gmail.com"
+SELECT * FROM customers
+WHERE email LIKE '%@gmail.com';
+
+Поверніть загальну кількість замовлень
+SELECT COUNT(*) FROM orders;
+
+Поверніть кількість замовлень, яку зробив юзер з конкретним айді
+SELECT COUNT(*) FROM orders
+WHERE customer_id=5;
+
+Поверніть всі продукти, які коштують від 10 до 100
+SELECT * FROM products
+WHERE price BETWEEN 10 AND 100;
