@@ -1,0 +1,11 @@
+Поверніть інформацію про найдорожчий продукт
+SELECT * FROM products
+WHERE price=(SELECT MAX(price) FROM products);
+
+Поверніть середню ціну всіх товарів
+SELECT AVG(price) FROM products;
+
+Поверніть суму всіх замовлень юзера з айді 1 (Не забувайте враховувати поле quantity)
+SELECT SUM(products.price * quantity) FROM orders
+INNER JOIN products ON orders.product_id = products.id
+WHERE customer_id = 1;

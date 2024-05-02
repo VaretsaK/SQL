@@ -1,0 +1,15 @@
+Поверніть всі продукти дорожче за 500
+SELECT * FROM products
+WHERE price > 500;
+
+Виведіть всі замовлення, які були створені після 1 січня 24 року
+SELECT * FROM orders
+WHERE order_date > '2024-01-01';
+
+Поверніть всі замовлення, де кількість товарів більша за 1
+SELECT * FROM orders
+WHERE quantity > 1;
+
+Поверніть всіх постачальників в кого людина для звʼязку - "Vlad Ushakov"
+SELECT * FROM suppliers
+WHERE contact_name = 'Vlad Ushakov';
