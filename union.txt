@@ -1,0 +1,35 @@
+-- Створіть SQL-запит, який виводить повний список імен усіх користувачів та працівників. Використайте UNION.
+
+SELECT user_name FROM users
+UNION
+SELECT librarian_name FROM librarians;
+
+-- Створіть SQL-запит, який об'єднує список усіх країн, з яких є користувачі, та країн, де працюють працівники. Використайте UNION.
+
+SELECT country FROM users
+UNION
+SELECT country FROM librarians;
+
+-- Створіть SQL-запит, який виводить імена, які є і серед користувачів, і серед працівників. Використайте INTERSECT.
+
+SELECT user_name FROM users
+INTERSECT
+SELECT librarian_name FROM librarians;
+
+-- Створіть SQL-запит, який виводить країни, з яких є як користувачі, так і працівники. Використайте INTERSECT.
+
+SELECT country FROM users
+INTERSECT
+SELECT country FROM librarians;
+
+-- Створіть SQL-запит, який виводить імена користувачів, які не використовуються працівниками. Використайте EXCEPT. Це означає, що ви маєте показати тільки ті імена користувачів, які не зустрічаються серед імен працівників.
+
+SELECT user_name FROM users
+EXCEPT
+SELECT librarian_name FROM librarians;
+
+-- Створіть SQL-запит, який виводить країни, з яких є користувачі, але не працівники. Використайте EXCEPT.
+
+SELECT country FROM users
+EXCEPT
+SELECT country FROM librarians;
