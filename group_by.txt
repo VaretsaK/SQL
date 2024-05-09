@@ -1,0 +1,21 @@
+-- Створіть SQL-запит, який виводить кількість книг, які були позичені кожним користувачем. Використайте GROUP BY.
+
+SELECT user_name, COUNT(*) amount_of_books
+	FROM checkouts
+	JOIN users ON checkouts.user_id = users.id
+	GROUP BY user_name
+	ORDER BY amount_of_books DESC;
+
+-- Створіть SQL-запит, який виводить кількість книг кожного жанру в бібліотеці. Використайте GROUP BY.
+
+SELECT genre, COUNT(*) amount_of_books
+	FROM books
+	GROUP BY genre
+	ORDER BY amount_of_books DESC;
+
+-- Створіть SQL-запит, який показує кількість працівників в кожній бібліотечній філії. Використайте GROUP BY.
+
+SELECT lib_branch, COUNT(*) number_of_employees
+	FROM librarians
+	GROUP BY lib_branch
+	ORDER BY number_of_employees DESC;
