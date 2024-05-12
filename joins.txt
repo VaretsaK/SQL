@@ -1,0 +1,60 @@
+
+-- Пов'яжіть таблиці users та borrow_records, використовуючи INNER JOIN на id користувача та user_id запису про позичання.
+-- Виведіть імена користувачів (first_name, last_name) та borrow_date.
+
+SELECT user_name, checkout_date FROM checkouts
+INNER JOIN users ON checkouts.user_id = users.id;
+
+-- Додайте до попереднього запиту групування по користувачам (first_name, last_name).
+-- Виведіть імена користувачів та кількість їхніх записів про позичання.
+
+SELECT user_name, COUNT(*) books_borrowed FROM checkouts
+INNER JOIN users ON checkouts.user_id = users.id
+GROUP BY user_name
+ORDER BY books_borrowed;
+
+-- До попереднього запиту додайте сортування за кількістю записів про позичання від більшого до меншого (DESC) і
+-- обмежте вивід першими 10 результатами.
+
+SELECT user_name, COUNT(*) books_borrowed FROM checkouts
+INNER JOIN users ON checkouts.user_id = users.id
+GROUP BY user_name
+ORDER BY books_borrowed DESC
+LIMIT 10;
+
+-- Виведіть інформацію про всіх користувачів і книги, які вони позичили (якщо позичили).
+-- Для цього використайте LEFT JOIN між таблицями users, borrow_records, book_copies та books.
+
+SELECT user_name, book_title, checkout_date FROM users
+LEFT JOIN checkouts ON  users.id = checkouts.user_id
+LEFT JOIN books ON  checkouts.book_isbn = books.isbn
+ORDER BY user_name;
+
+-- Додайте до попереднього запиту умову вибірки лише тих користувачів, які позичили хоча б одну книгу (WHERE books.title IS NOT NULL).
+
+SELECT user_name, book_title, checkout_date FROM users
+LEFT JOIN checkouts ON  users.id = checkouts.user_id
+LEFT JOIN books ON  checkouts.book_isbn = books.isbn
+WHERE book_title IS NOT NULL
+ORDER BY user_name, checkout_date;
+
+-- Додайте до попереднього запиту агрегатну функцію для підрахунку кількості книг, які позичив кожен користувач.
+
+SELECT user_name, COUNT(book_title) FROM users
+LEFT JOIN checkouts ON users.id = checkouts.user_id
+LEFT JOIN books ON checkouts.book_isbn = books.isbn
+WHERE book_title IS NOT NULL
+GROUP BY user_name;
+
+-- Використайте FULL JOIN для з'єднання таблиць employees та library_branches, виведіть імена співробітників та назву філії, в якій вони працюють.
+
+SELECT librarian_name, branch_name FROM librarians
+FULL JOIN library_branches ON librarians.branch_id = library_branches.id;
+
+-- Додайте до попереднього запиту з'єднання з третьою таблицею users, з'єднайте її по country, а потім відфільтруйте результат,
+-- щоб показати лише тих користувачів і співробітників, які проживають у США.
+
+SELECT librarian_name, user_name, users.country FROM librarians
+FULL JOIN library_branches ON librarians.branch_id = library_branches.id
+FULL JOIN users ON librarians.country = users.country
+WHERE librarians.country = 'USA' AND users.country = 'USA';
